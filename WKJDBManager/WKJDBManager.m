@@ -33,17 +33,6 @@
     return self;
 }
 
-#pragma mark ModelInfo
-
-- (NSString *)getTableNameForModel:(NSObject<WKJDBModel> *)model
-{
-    if (![[model class] respondsToSelector:@selector(tableNameForModel)]) return @"";
-    
-    NSString *tableName = [[model class] tableNameForModel];
-    
-    return tableName;
-}
-
 #pragma mark Select
 
 - (NSArray <id<WKJDBModel>> *)findModelsBySQL:(NSString *)sql modelClass:(Class)modelClass
@@ -66,14 +55,14 @@
 
 #pragma mark SaveOrUpdate
 
-- (BOOL)saveOrUpdateModel:(NSObject<WKJDBModel> *)model
+- (BOOL)saveOrUpdateModel:(id<WKJDBModel>)model
 {
     if (nil == model) return NO;
     
     return [self saveOrUpdateModels:@[model]];
 }
 
-- (BOOL)saveOrUpdateModels:(NSArray <NSObject<WKJDBModel> *> *)models
+- (BOOL)saveOrUpdateModels:(NSArray <id<WKJDBModel>> *)models
 {
     if (nil == models) return NO;
     
@@ -87,15 +76,16 @@
     return result;
 }
 
-- (BOOL)executeUpdateModels:(NSArray <NSObject<WKJDBModel> *> *)models db:(FMDatabase *)db
+- (BOOL)executeUpdateModels:(NSArray <id<WKJDBModel>> *)models db:(FMDatabase *)db
 {
     for (NSObject <WKJDBModel> *model in models) {
         
         NSString *tableName = [self getTableNameForModel:model];
         if (!tableName || [tableName isEqualToString:@""]) continue;
         
-        NSArray *igKeys = @[@"debugDescription",@"description",@"hash",@"superclass"];
-        NSMutableDictionary *info = [model mj_keyValuesWithIgnoredKeys:igKeys];
+//        NSArray *igKeys = @[@"debugDescription",@"description",@"hash",@"superclass"];
+//        NSMutableDictionary *info = [model mj_keyValuesWithIgnoredKeys:igKeys];
+        NSMutableDictionary *info = model.mj_keyValues;
         NSString *modelId = info[@"id"];
         
         NSString *paramStr = @"";
@@ -152,14 +142,14 @@
 
 #pragma mark Delete
 
-- (BOOL)deleteModel:(NSObject<WKJDBModel> *)model
+- (BOOL)deleteModel:(id<WKJDBModel>)model
 {
     if (nil == model) return NO;
     
     return [self deleteModels:@[model]];
 }
 
-- (BOOL)deleteModels:(NSArray <NSObject<WKJDBModel> *> *)models
+- (BOOL)deleteModels:(NSArray <id<WKJDBModel>> *)models
 {
     if (nil == models) return NO;
     
@@ -183,6 +173,17 @@
     }];
     
     return result;
+}
+
+#pragma mark ModelInfo
+
+- (NSString *)getTableNameForModel:(NSObject<WKJDBModel> *)model
+{
+    if (![[model class] respondsToSelector:@selector(tableNameForModel)]) return @"";
+    
+    NSString *tableName = [[model class] tableNameForModel];
+    
+    return tableName;
 }
 
 @end

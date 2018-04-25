@@ -22,14 +22,14 @@
 
 - (instancetype)initWithPath:(NSString *)path;
 
-- (NSArray <id <WKJDBModel>> *)findModelsBySQL:(NSString *)sql modelClass:(Class)modelClass;
+- (NSArray <id<WKJDBModel>> *)findModelsBySQL:(NSString *)sql modelClass:(Class)modelClass;
 
-- (BOOL)saveOrUpdateModel:(NSObject<WKJDBModel> *)model;
+- (BOOL)saveOrUpdateModel:(id<WKJDBModel>)model;
 
-- (BOOL)saveOrUpdateModels:(NSArray <NSObject<WKJDBModel> *> *)models;
+- (BOOL)saveOrUpdateModels:(NSArray <id<WKJDBModel>> *)models;
 
-- (BOOL)deleteModel:(NSObject<WKJDBModel> *)model;
+- (BOOL)deleteModel:(id<WKJDBModel>)model;
 
-- (BOOL)deleteModels:(NSArray <NSObject<WKJDBModel> *> *)models;
+- (BOOL)deleteModels:(NSArray <id<WKJDBModel>> *)models;
 
 @end
